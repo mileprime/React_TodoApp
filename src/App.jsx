@@ -4,12 +4,11 @@ import { useEffect, useState } from "react";
 
 function App() {
   //create state for the tasks array
-  const [tasks, setTasks] = useState([
-    { description: "this is description", id: Math.random() },
-  ]);
+  const [tasks, setTasks] = useState([]);
   const [input, setInput] = useState("");
   const [showEdit, setShowEdit] = useState(false);
-  const [editValue, setEditValue] = useState(false);
+  const [editValue, setEditValue] = useState("");
+  const [selectedId, setSelectedId] = useState(null);
 
   let getTask = (e) => {
     console.log(e.target.value);
@@ -50,7 +49,7 @@ function App() {
       {/* map through the tasks state to show it in the return */}
       {tasks.map((item) => (
         <div key={item.id}>
-          {showEdit ? (
+          {showEdit && item.id == selectedId ? (
             <input
               type="text"
               onChange={(e) => setEditValue(e.target.value)}
@@ -63,6 +62,7 @@ function App() {
             onClick={() => {
               setEditValue(item.description);
               setShowEdit(true);
+              setSelectedId(item.id);
             }}
           >
             Edit
