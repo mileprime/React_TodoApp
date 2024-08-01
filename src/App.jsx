@@ -1,35 +1,78 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react";
+import "./App.css";
+import { useEffect, useState } from "react";
 
 function App() {
-  const [count, setCount] = useState(0)
+  //create state for the tasks array
+  const [tasks, setTasks] = useState([
+    { description: "this is description", id: Math.random() },
+  ]);
+  const [input, setInput] = useState("");
+  const [showEdit, setShowEdit] = useState(false);
+  const [editValue, setEditValue] = useState(false);
 
+  let getTask = (e) => {
+    console.log(e.target.value);
+    setInput(e.target.value);
+  };
+
+  let addTask = () => {
+    if (input.length !== 0) {
+      setTasks((prevTasks) => [
+        ...prevTasks,
+        { description: input, id: Math.random() },
+      ]);
+    } else {
+      alert("Empty task");
+    }
+  };
+
+  let deleteTask = (id) => {
+    setTasks((prevTasks) =>
+      prevTasks.filter((task) => {
+        if (task.id != id) {
+          return task;
+        }
+      })
+    );
+  };
+
+  //map through the tasks state to show it in the return
+  //create the add function
+  // In th eadd function, we will push the new item to th etasks state
+  // create the update function
+  //adding the update function as onclick to each
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      {/* get the input from the user */}
+      <input type="text" onChange={getTask} />
+      <button onClick={addTask}>Add</button>
+      {/* map through the tasks state to show it in the return */}
+      {tasks.map((item) => (
+        <div key={item.id}>
+          {showEdit ? (
+            <input
+              type="text"
+              onChange={(e) => setEditValue(e.target.value)}
+              value={editValue}
+            />
+          ) : (
+            item.description
+          )}
+          <button
+            onClick={() => {
+              setEditValue(item.description);
+              setShowEdit(true);
+            }}
+          >
+            Edit
+          </button>
+          {showEdit ? <button>Save</button> : null}
+          <button onClick={() => deleteTask(item.id)}>Delete</button>{" "}
+        </div>
+      ))}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
