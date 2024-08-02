@@ -21,7 +21,7 @@ function App() {
   };
 
   let addTask = () => {
-    if (input.length !== 0) {
+    if (!isEmptyOrWhitespace(input)) {
       let newTask = { description: input, id: Math.random() };
       setTasks((prevTasks) => [...prevTasks, newTask]);
       let data = [...tasks];
@@ -31,6 +31,11 @@ function App() {
     } else {
       alert("Empty task");
     }
+  };
+
+  const isEmptyOrWhitespace = (text) => {
+    const regex = /^\s*$/;
+    return regex.test(text);
   };
 
   let deleteTask = (id) => {
@@ -48,17 +53,31 @@ function App() {
   };
 
   let editTask = () => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) => {
-        if (task.id == selectedId) {
-          return { ...task, description: editValue };
-        } else {
-          return task;
-        }
-      })
-    );
+    let updateData = tasks.map((task) => {
+      if (task.id == selectedId) {
+        return { ...task, description: editValue };
+      } else {
+        return task;
+      }
+    });
+
+    localStorage.setItem("tasks", JSON.stringify(updateData));
+    setTasks(updateData);
     setShowEdit(false);
   };
+
+  // let editTask = () => {
+  //   setTasks((prevTasks) =>
+  //     prevTasks.map((task) => {
+  //       if (task.id == selectedId) {
+  //         return { ...task, description: editValue };
+  //       } else {
+  //         return task;
+  //       }
+  //     })
+  //   );
+  //   setShowEdit(false);
+  // };
 
   //map through the tasks state to show it in the return
   //create the add function
